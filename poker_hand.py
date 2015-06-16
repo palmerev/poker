@@ -5,6 +5,18 @@ VALUES = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'] # T -> 10
 RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 RANKS_BY_VALUE = dict(zip(VALUES, RANKS))
 CARDS = [y + x for x in SUITS for y in VALUES]
+HANDS = {
+    "High Card": 0,
+    "One Pair": 1,
+    "Two Pair": 2,
+    "Three of a Kind": 3,
+    "Straight": 4,
+    "Flush": 5,
+    "Full House": 6,
+    "Four of a Kind": 7,
+    "Straight Flush": 8,
+    "Royal Flush": 9
+}
 
 def tell_hand(hand):
     hand_is_valid = validate_hand(hand)
@@ -36,6 +48,25 @@ def tell_hand(hand):
             return "One Pair"
         else:
             return "High Card"
+
+def two_player_hand(p1_hand, p2_hand):
+    p1_values = [x[0] for x in p1_hand]
+    p2_values = [x[0] for x in p2_hand]
+    hand1 = tell_hand(p1_hand)
+    hand2 = tell_hand(p2_hand)
+    rank1 = HANDS[hand1]
+    rank2 = HANDS[hand2]
+    if rank1 > rank2:
+        return "Player 1 Wins"
+    elif rank2 > rank1:
+        return "Player 2 Wins"
+    else:
+        if p1_values > p2_values:
+            return "Player 1 Wins"
+        elif p2_values > p1_values:
+            return "Player 2 Wins"
+        else:
+            return "Draw"
 
 def validate_hand(hand):
     hand_set_size = len(set(hand))
@@ -123,5 +154,5 @@ def test_tell_hand():
     HC = tell_hand(['AH', '4D', 'KH', '2D', 'QC'])
     print "Testing High Card: %r" % (HC,)
 
-if __name__ == '__main__':
-    test()
+def test_two_player_hand():
+    pass
