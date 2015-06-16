@@ -13,29 +13,29 @@ def tell_hand(hand):
     else:
         flush = is_flush(hand)
         straight = is_straight(hand)
-        card_counts = make_set_counts(hand)
+        card_counts = group_by_kind(hand)
         ordered_values = [x[0] for x in order_by_rank(hand)]
 
         if "".join(ordered_values) == "TJQKA":
-            return "Royal Flush", ordered_values
+            return "Royal Flush"
         elif straight and flush:
-            return "Straight Flush", ordered_values
+            return "Straight Flush"
         elif flush and not straight:
-            return "Flush", ordered_values
+            return "Flush"
         elif straight and not flush:
-            return "Straight", ordered_values
+            return "Straight"
         elif max(card_counts) == 4:
-            return "Four of a Kind", ordered_values
+            return "Four of a Kind"
         elif card_counts[0] == 3 and card_counts[1] == 2:
-            return "Full House", ordered_values
+            return "Full House"
         elif card_counts[0] == 3:
-            return "Three of a Kind", ordered_values
+            return "Three of a Kind"
         elif card_counts[0] == 2 and card_counts[1] == 2:
-            return "Two Pair", ordered_values
+            return "Two Pair"
         elif card_counts[0] == 2:
-            return "One Pair", ordered_values
+            return "One Pair"
         else:
-            return "High Card", ordered_values #return highest card
+            return "High Card"
 
 def validate_hand(hand):
     hand_set_size = len(set(hand))
@@ -89,17 +89,17 @@ def is_flush(h):
     if suit_qty[0][1] == 5: #all 5 cards the same suit
         return True
 
-def make_value_counts(h):
+def count_values(h):
     vals = [x[0] for x in h]
     value_counts = Counter(vals)
     return value_counts
 
 def group_by_kind(h):
-    cards_by_rank = make_value_counts(h).most_common()
+    cards_by_rank = count_values(h).most_common()
     counts_only = [x[1] for x in cards_by_rank]
     return counts_only
 
-def test():
+def test_tell_hand():
     RF = tell_hand(['AH', 'QH', 'KH', 'TH', 'JH'])
     print "Testing Royal Flush: %r, %r" % (RF, RF == "Royal Flush")
     SF = tell_hand(['KD', 'QD', 'JD', 'TD', '9D'])
