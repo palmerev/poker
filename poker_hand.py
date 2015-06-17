@@ -50,7 +50,7 @@ def tell_hand(hand):
         else:
             return "High Card"
 
-def two_player_hand(p1_hand, p2_hand):
+def play_hands(p1_hand, p2_hand):
     p1_values = [x[0] for x in order_by_rank(p1_hand)]
     p2_values = [x[0] for x in order_by_rank(p2_hand)]
     p1_values.reverse()
@@ -61,13 +61,22 @@ def two_player_hand(p1_hand, p2_hand):
     rank2 = HANDS[hand2]
     if rank1 > rank2:
         return "Player 1 Wins"
-    elif rank2 > rank1:
+    elif rank1 < rank2:
         return "Player 2 Wins"
     else:
         #if hand1 == "One Pair":
         #    print "same rank:", hand1, p1_values, p2_values, rank1 > rank2
         if hand1 in ["Full House", "Two Pair", "One Pair"]:
-            return break_tie(p1_values, p2_values)
+            return break_grouped_hand_tie(p1_values, p2_values)
+        elif hand1 in ["Straight", "Straight Flush"]:
+            #only one player has an Ace-low straight
+            ace_low = "A5432"
+            if "".join(p1_values) != ace_low and "".join(p2_values) == ace_low:
+                return "Player 1 Wins"
+            elif "".join(p1_values) == ace_low and "".join(p2_values) != ace_low:
+                return "Player 2 Wins"
+            else:
+                return "two straight draw"
         elif p1_values > p2_values:
             return "Player 1 Wins"
         elif p2_values > p1_values:
@@ -75,7 +84,7 @@ def two_player_hand(p1_hand, p2_hand):
         else:
             return "Draw"
 
-def break_tie(p1_vals, p2_vals):
+def break_grouped_hand_tie(p1_vals, p2_vals):
     c1 = Counter(p1_vals).most_common() # most common cards by count
     c2 = Counter(p2_vals).most_common()
     r1 = RANKS_BY_VALUE[c1[0][0]] # rank of most common card
@@ -125,8 +134,7 @@ def order_by_rank(hand):
     return ordered_hand
 
 def is_straight(hand):
-    in_order_hand = order_by_rank(hand)
-    vals = [x[0] for x in in_order_hand]
+    vals = [x[0] for x in order_by_rank(hand)]
     if "".join(vals) == "2345A":
         return True
     i = 0
