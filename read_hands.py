@@ -10,13 +10,15 @@ for line in poker_txt:
     cards = line.split(" ")
     p1_cards = cards[:5]
     p2_cards = cards[5:]
-    result = two_player_hand(p1_cards, p2_cards)
+    if is_straight(p1_cards) and is_straight(p2_cards):
+        print "two straights:", order_by_rank(p1_cards), order_by_rank(p2_cards)
+    result = play_hands(p1_cards, p2_cards)
 
     if result == "Player 1 Wins":
         total1 += 1
     elif result == "Player 2 Wins":
         total2 += 1
-        
+
 poker_txt.close()
 
 print "Player 1 wins", total1, "hands."
