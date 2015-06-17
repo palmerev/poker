@@ -1,5 +1,6 @@
 #poker_hand.py
 from collections import Counter
+from operator import itemgetter
 SUITS = ['C','H','S','D'] # Clubs, Hearts, Spades, Diamonds
 VALUES = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'] # T -> 10
 RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
@@ -50,8 +51,10 @@ def tell_hand(hand):
             return "High Card"
 
 def two_player_hand(p1_hand, p2_hand):
-    p1_values = [x[0] for x in p1_hand]
-    p2_values = [x[0] for x in p2_hand]
+    p1_values = [x[0] for x in order_by_rank(p1_hand)]
+    p2_values = [x[0] for x in order_by_rank(p2_hand)]
+    p1_values.reverse()
+    p2_values.reverse()
     hand1 = tell_hand(p1_hand)
     hand2 = tell_hand(p2_hand)
     rank1 = HANDS[hand1]
@@ -61,9 +64,39 @@ def two_player_hand(p1_hand, p2_hand):
     elif rank2 > rank1:
         return "Player 2 Wins"
     else:
-        if p1_values > p2_values:
+        #if hand1 == "One Pair":
+        #    print "same rank:", hand1, p1_values, p2_values, rank1 > rank2
+        if hand1 in ["Full House", "Two Pair", "One Pair"]:
+            return break_tie(p1_values, p2_values)
+        elif p1_values > p2_values:
             return "Player 1 Wins"
         elif p2_values > p1_values:
+            return "Player 2 Wins"
+        else:
+            return "Draw"
+
+def break_tie(p1_vals, p2_vals):
+    c1 = Counter(p1_vals).most_common() # most common cards by count
+    c2 = Counter(p2_vals).most_common()
+    r1 = RANKS_BY_VALUE[c1[0][0]] # rank of most common card
+    r2 = RANKS_BY_VALUE[c2[0][0]]
+    rc1 = [tuple([x[1]]) + (RANKS_BY_VALUE[x[0]],) for x in c1] # (count, rank)
+    rc2 = [tuple([x[1]]) + (RANKS_BY_VALUE[x[0]],) for x in c2]
+    rc1.sort(key=itemgetter(0,1), reverse=True) # sort by count, then rank
+    if rc1 > rc2:
+        #if rc1[0][1] == rc2[0][1]:
+        #    print "rc1 greater:", rc1, rc2
+        return "Player 1 Wins"
+    elif rc2 > rc1:
+        #if rc1[0][1] == rc2[0][1]:
+        #    print "rc2 greater:", rc1, rc2
+        return "Player 2 Wins"
+    else:
+        r1_second = RANKS_BY_VALUE[c1[1][0]] #rank of 2nd most common card
+        r2_second = RANKS_BY_VALUE[c2[1][0]]
+        if r1 > r2:
+            return "Player 1 Wins"
+        elif r2 > r1:
             return "Player 2 Wins"
         else:
             return "Draw"
