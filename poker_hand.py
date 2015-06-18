@@ -59,6 +59,8 @@ def play_hands(p1_hand, p2_hand):
     hand2 = tell_hand(p2_hand)
     rank1 = HANDS[hand1]
     rank2 = HANDS[hand2]
+    rank_list1 = [RANKS_BY_VALUE[x] for x in p1_values]
+    rank_list2 = [RANKS_BY_VALUE[x] for x in p2_values]
     if rank1 > rank2:
         return "Player 1 Wins"
     elif rank1 < rank2:
@@ -66,32 +68,40 @@ def play_hands(p1_hand, p2_hand):
     else:
         #if hand1 == "One Pair":
         #    print "same rank:", hand1, p1_values, p2_values, rank1 > rank2
-        if hand1 in ["Full House", "Two Pair", "One Pair"]:
+        if hand1 in ["Four of a Kind", "Three of a Kind", "Full House", "Two Pair", "One Pair"]:
             return break_grouped_hand_tie(p1_values, p2_values)
         elif hand1 in ["Straight", "Straight Flush"]:
-            #only one player has an Ace-low straight
             ace_low = "A5432"
-            if "".join(p1_values) != ace_low and "".join(p2_values) == ace_low:
+            vals1 = "".join(p1_values)
+            vals2 = "".join(p2_values)
+            #only one player has an Ace-low straight
+            if vals1 != ace_low and vals2 == ace_low:
                 return "Player 1 Wins"
-            elif "".join(p1_values) == ace_low and "".join(p2_values) != ace_low:
+            elif vals1 == ace_low and vals2 != ace_low:
                 return "Player 2 Wins"
             else:
-                return "two straight draw"
-        elif p1_values > p2_values:
+                return "two straight draw" #shouldn't happen in project Euler problem
+        elif rank_list1 > rank_list2:
+            #print "p1_values:", p1_values, "p2_values", p2_values, "Player 1 Wins"
+            #print rank_list1, rank_list2, "Player 1 wins"
             return "Player 1 Wins"
-        elif p2_values > p1_values:
+        elif rank_list1 < rank_list2:
+            #print "p1_values:", p1_values, "p2_values", p2_values, "Player 2 Wins"
+            #print rank_list1, rank_list2, "Player 2 wins"
             return "Player 2 Wins"
         else:
-            return "Draw"
+            return "Draw" #shouldn't happen in project Euler problem
 
 def break_grouped_hand_tie(p1_vals, p2_vals):
     c1 = Counter(p1_vals).most_common() # most common cards by count
     c2 = Counter(p2_vals).most_common()
     r1 = RANKS_BY_VALUE[c1[0][0]] # rank of most common card
     r2 = RANKS_BY_VALUE[c2[0][0]]
-    rc1 = [tuple([x[1]]) + (RANKS_BY_VALUE[x[0]],) for x in c1] # (count, rank)
+    rc1 = [tuple([x[1]]) + (RANKS_BY_VALUE[x[0]],) for x in c1] #  (count,) + (rank,)
     rc2 = [tuple([x[1]]) + (RANKS_BY_VALUE[x[0]],) for x in c2]
     rc1.sort(key=itemgetter(0,1), reverse=True) # sort by count, then rank
+    rc2.sort(key=itemgetter(0,1), reverse=True)
+
     if rc1 > rc2:
         #if rc1[0][1] == rc2[0][1]:
         #    print "rc1 greater:", rc1, rc2
@@ -195,5 +205,5 @@ def test_tell_hand():
     HC = tell_hand(['AH', '4D', 'KH', '2D', 'QC'])
     print "Testing High Card: %r" % (HC,)
 
-def test_two_player_hand():
+def test_play_hands():
     pass
