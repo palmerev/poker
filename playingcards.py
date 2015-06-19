@@ -15,12 +15,15 @@ class Card(object):
         self.rank = Card.RANKS_BY_VALUE[self.value]
 
     def __str__(self):
-        return self.name
+        return "".join(["'", self.name, "'"])
+
+    def __repr__(self):
+        return "".join(["'", self.name, "'"])
 
     def __cmp__(self, other):
         return cmp(self.rank, other.rank)
 
-    def test():
+'''    def test():
         ace_spades = Card('AS')
         print "created 'AS'"
         print ("AS.value:", ace_spades.value, "AS.suit:", ace_spades.suit, "AS.rank:",
@@ -43,15 +46,19 @@ class Card(object):
         print "AS < QH:", ace_spades < q_hearts, "AS > QH:", ace_spades > q_hearts
         print "AS == QH", ace_spades == q_hearts
         print "QH == QC", q_hearts == q_clubs
-
+'''
 
 class Deck(object):
     def __init__(self):
         self.deck = [Card(x) for x in Card.CARDS]
+        print "created 52 Card deck"
         self.card_count = len(self.deck)
 
     def __str__(self):
-        return self.deck
+        return str([x.name for x in self.deck])
+
+    def __repr__(self):
+        return str([x.name for x in self.deck])
 
     def shuffle(self):
         if self.card_count > 0:

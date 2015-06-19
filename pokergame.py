@@ -1,11 +1,11 @@
 #pokergame.py
-import playingcards #Card, Deck
-import pokerhand
+import playingcards as pcards #Card, Deck
+import pokerhand as phand
 
 class PokerGame(object):
     def __init__(self, *players):
         self.players = [Player(p) for p in players]
-        self.deck = playingcards.Deck()
+        self.deck = pcards.Deck()
         self.pot = 0
 
     def __str__(self):
@@ -23,7 +23,8 @@ class PokerGame(object):
 class Player(object):
     def __init__(self, name, chips=100):
         self.name = name
-        self.hand = Hand()
+        print "created Player", self.name
+        self.hand = pcards.Hand()
         self.chips = chips
 
     def __str__(self):
