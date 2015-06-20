@@ -1,8 +1,11 @@
 # pokerhand.py
-from collections import Counter
-from playingcards import Deck, Card
+from collections import Counter, namedtuple
+from random import randint
+import playingcards as pc
 
-class Hand(Deck):
+class Hand(pc.Deck):
+    SERIES_HANDS = ["High Card", "Straight", "Flush" "Straight Flush", "Royal Flush"]
+    GROUPED_HANDS = ["Four of a Kind", "Three of a Kind", "Full House", "Two Pair", "One Pair"]
     HANDS_BY_RANK = {
         "High Card": 0,
         "One Pair": 1,
@@ -17,22 +20,47 @@ class Hand(Deck):
     }
 
     def __init__(self):
+        super(Hand, self).__init__()
         self.cards = [] #will contain Card objects
-        print "created empty Hand"
 
     def __str__(self):
-        return str(self.cards)
+        return " ".join([str(sorted(self.cards, reverse=True)), self.handtype()])
 
     def __cmp__(self, other):
         """Returns 1 if calling object (self) ranks higher than other,
         -1 if self ranks lower, or 0 if they have equal rank."""
-        self_rank = HANDS_BY_RANK[handtype(self)]
-        other_rank = HANDS_BY_RANK[handtype(other)]
-        return cmp(self_rank, other_rank)
+        hand_rank1 = Hand.HANDS_BY_RANK[self.handtype()]
+        hand_rank2 = Hand.HANDS_BY_RANK[other.handtype()]
+        result = cmp(hand_rank1, hand_rank2)
+        if result: #winner by hand rank
+            return result
+        #tiebreakers
+        elif self.handtype() in Hand.SERIES_HANDS:
+            return cmp(sorted(self.cards, reverse=True), sorted(other.cards, reverse=True))
+        elif self.handtype() in Hand.GROUPED_HANDS:
+            return self.break_grouped_hand_tie(other)
+        else:
+            raise ValueError, "unrecognized hand in Hand.__cmp__"
+
+    def break_grouped_hand_tie(self, other):
+        cr_pairs1 = Hand.make_count_rank_pairs(self)
+        cr_pairs2 = Hand.make_count_rank_pairs(other)
+        #print "cr_pairs1:", cr_pairs1
+        #print "cr_pairs2:", cr_pairs2
+        return cmp(cr_pairs1, cr_pairs2)
+
+    def make_count_rank_pairs(self):
+        CRPair = namedtuple('CRPair', 'count rank')
+        card_list = []
+        #take value, count pairs from dictionary and make a list of count, rank pairs
+        for val, cnt in self.value_counter().items():
+            cr = CRPair(count=cnt ,rank=pc.Card.RANKS_BY_VALUE[val])
+            card_list.append(cr)
+        return sorted(card_list, reverse=True)
 
     @property
     def values(self):
-        return [c.value for c in self.cards]
+        return [c.value for c in self.order_by_rank(self.cards)]
 
     @property
     def suits(self):
@@ -40,7 +68,10 @@ class Hand(Deck):
 
     @property
     def ranks(self):
-        return sorted([Card.RANKS_BY_VALUE[c.value] for c in self.cards])
+        return sorted(pc.Card.RANKS_BY_VALUE[c.value] for c in self.cards)
+
+    def discard_all(self):
+        del self.cards[:]
 
     def handtype(self):
         """returns the type of hand as a string"""
@@ -48,7 +79,7 @@ class Hand(Deck):
         straight = self.is_straight()
         #quantity of each card value, from most to least common
         card_counts = [x[1] for x in self.value_counter().most_common()]
-        ordered_values = [x[0] for x in self.order_by_rank()]
+        ordered_values = [c.value for c in self.order_by_rank()]
 
         if "".join(ordered_values) == "TJQKA":
             return "Royal Flush"
@@ -71,19 +102,18 @@ class Hand(Deck):
         else:
             return "High Card"
 
-
     def order_by_rank(self, rev=False):
+        #TODO: remove this function and see if built-in sort works with __cmp__ overridden
         """Returns the hand with the cards arranged from lowest to highest.
         If rev=True, cards are arranged from highest to lowest."""
-        cards_with_ranks = [(playingcards.RANKS_BY_VALUE[c.value], c) for c in self.cards]
+        cards_with_ranks = [(pc.Card.RANKS_BY_VALUE[c.value], c) for c in self.cards]
         cards_with_ranks.sort()
         if rev:
             return [c[1] for c in reversed(cards_with_ranks)]
-        return [c[1] for c in  cards_with_ranks]
-
+        return [c[1] for c in cards_with_ranks]
 
     def has_duplicates(self):
-        quantities = [x[1] for x in self.value_counter().values()]
+        quantities = [self.value_counter().values()]
         if max(quantities) == 1:
             return False
         return True
