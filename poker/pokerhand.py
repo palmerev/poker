@@ -60,7 +60,7 @@ class Hand(pc.Deck):
 
     @property
     def values(self):
-        return [c.value for c in self.order_by_rank(self.cards)]
+        return [c.value for c in sorted(self.cards)]
 
     @property
     def suits(self):

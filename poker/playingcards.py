@@ -50,19 +50,19 @@ class Card(object):
 
 class Deck(object):
     def __init__(self):
-        self.deck = [Card(x) for x in Card.CARD_NAMES]
-        self.card_count = len(self.deck)
+        self.cards = [Card(x) for x in Card.CARD_NAMES]
+        self.card_count = len(self.cards)
         self.shuffle()
 
     def __str__(self):
-        return str([x.name for x in self.deck])
+        return str([x.name for x in self.cards])
 
     def __repr__(self):
-        return str([x.name for x in self.deck])
+        return str([x.name for x in self.cards])
 
     def shuffle(self):
         if self.card_count > 0:
-            shuffle(self.deck) #uses random.shuffle()
+            shuffle(self.cards) #uses random.shuffle()
         else:
             print "Deck is empty!"
 
@@ -74,7 +74,7 @@ class Deck(object):
         if n > self.card_count:
             n = self.card_count
         for i in range(n):
-            drawn.append(self.deck.pop())
+            drawn.append(self.cards.pop())
             self.card_count -= 1
         return drawn
 
