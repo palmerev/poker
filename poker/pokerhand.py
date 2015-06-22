@@ -81,7 +81,7 @@ class Hand(pc.Deck):
         card_counts = [x[1] for x in self.value_counter().most_common()]
         ordered_values = [c.value for c in self.order_by_rank()]
 
-        if "".join(ordered_values) == "TJQKA":
+        if "".join(ordered_values) == "TJQKA" and flush:
             return "Royal Flush"
         elif straight and flush:
             return "Straight Flush"
