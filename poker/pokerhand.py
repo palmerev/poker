@@ -1,6 +1,5 @@
 # pokerhand.py
 from collections import Counter, namedtuple
-from random import randint
 import playingcards as pc
 
 class Hand(pc.Deck):
