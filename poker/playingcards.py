@@ -23,30 +23,6 @@ class Card(object):
     def __cmp__(self, other):
         return cmp(self.rank, other.rank)
 
-'''    def test():
-        ace_spades = Card('AS')
-        print "created 'AS'"
-        print ("AS.value:", ace_spades.value, "AS.suit:", ace_spades.suit, "AS.rank:",
-               ace_spades.rank, "AS.name:", ace_spades.name
-        )
-        print "Ace of Spades prints as:", ace_spades
-
-        q_hearts = Card('QH')
-        print "created 'QH'"
-        print ("QH.value:", q_hearts.value, "QH.suit:", q_hearts.suit, "QH.rank:",
-               q_hearts.rank, "QH.name:", q_hearts.name
-        )
-
-        q_clubs = Card('QC')
-        print "created 'QC'"
-        print ("QC.value:", q_clubs.value, "QC.suit:", q_clubs.suit, "QC.rank:",
-               q_clubs.rank, "QC.name:", q_clubs.name
-        )
-
-        print "AS < QH:", ace_spades < q_hearts, "AS > QH:", ace_spades > q_hearts
-        print "AS == QH", ace_spades == q_hearts
-        print "QH == QC", q_hearts == q_clubs
-'''
 
 class Deck(object):
     def __init__(self):
