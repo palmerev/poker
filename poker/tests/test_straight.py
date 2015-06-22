@@ -11,17 +11,23 @@ class TestStraight(unittest.TestCase):
         self.hand1.discard_all()
         self.hand2.discard_all()
 
-    def test_handtype(self):
+    def test_ten_to_ace(self):
         self.hand1.cards.extend([
             pc.Card('AH'), pc.Card('KC'), pc.Card('QD'), pc.Card('JD'), pc.Card('TH')
         ])
         self.assertEqual(self.hand1.handtype(), "Straight")
 
-#    def test_ace_low(self):
-#        self.hand2.cards.extend([
-#            pc.Card('4D'), pc.Card('5C'), pc.Card('3C'), pc.Card('2H'), pc.Card('AH')
-#        ])
-#        self.assertEqual(self.hand2.handtype(), "Straight")
+    def test_two_to_six(self):
+        self.hand1.cards.extend([
+            pc.Card('2H'), pc.Card('3C'), pc.Card('4D'), pc.Card('5D'), pc.Card('6H')
+        ])
+        self.assertEqual(self.hand1.handtype(), "Straight")
+
+    def test_ace_low(self):
+        self.hand2.cards.extend([
+            pc.Card('4D'), pc.Card('5C'), pc.Card('3C'), pc.Card('2H'), pc.Card('AH')
+        ])
+        self.assertEqual(self.hand2.handtype(), "Straight")
 
     def test_cmp_different_rank(self):
         self.hand1.cards.extend([

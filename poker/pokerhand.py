@@ -4,7 +4,7 @@ from random import randint
 import playingcards as pc
 
 class Hand(pc.Deck):
-    SERIES_HANDS = ["High Card", "Straight", "Flush" "Straight Flush", "Royal Flush"]
+    SERIES_HANDS = ["High Card", "Straight", "Flush", "Straight Flush", "Royal Flush"]
     GROUPED_HANDS = ["Four of a Kind", "Three of a Kind", "Full House", "Two Pair", "One Pair"]
     HANDS_BY_RANK = {
         "High Card": 0,
@@ -41,6 +41,9 @@ class Hand(pc.Deck):
             return self.break_grouped_hand_tie(other)
         else:
             raise ValueError, "unrecognized hand in Hand.__cmp__"
+
+    def add(self, *card_names):
+        self.cards.extend(pc.Card(name) for name in card_names)
 
     def break_grouped_hand_tie(self, other):
         cr_pairs1 = Hand.make_count_rank_pairs(self)
@@ -79,15 +82,15 @@ class Hand(pc.Deck):
         straight = self.is_straight()
         #quantity of each card value, from most to least common
         card_counts = [x[1] for x in self.value_counter().most_common()]
-        ordered_values = [c.value for c in self.order_by_rank()]
+        ordered_values = [c.value for c in sorted(self.cards, reverse=True)]
 
-        if "".join(ordered_values) == "TJQKA" and flush:
+        if "".join(ordered_values) == "AKQJT" and flush:
             return "Royal Flush"
-        elif straight and flush:
+        elif (straight or "".join(ordered_values) == "A5432") and flush:
             return "Straight Flush"
         elif flush and not straight:
             return "Flush"
-        elif straight and not flush:
+        elif (straight or "".join(ordered_values) == "A5432") and not flush:
             return "Straight"
         elif max(card_counts) == 4:
             return "Four of a Kind"
@@ -103,7 +106,8 @@ class Hand(pc.Deck):
             return "High Card"
 
     def order_by_rank(self, rev=False):
-        #TODO: remove this function and see if built-in sort works with __cmp__ overridden
+        pass
+        '''#TODO: remove this function and see if built-in sort works with __cmp__ overridden
         """Returns the hand with the cards arranged from lowest to highest.
         If rev=True, cards are arranged from highest to lowest."""
         cards_with_ranks = [(pc.Card.RANKS_BY_VALUE[c.value], c) for c in self.cards]
@@ -111,9 +115,10 @@ class Hand(pc.Deck):
         if rev:
             return [c[1] for c in reversed(cards_with_ranks)]
         return [c[1] for c in cards_with_ranks]
+        '''
 
     def has_duplicates(self):
-        quantities = [self.value_counter().values()]
+        quantities = self.value_counter().values()
         if max(quantities) == 1:
             return False
         return True
@@ -123,7 +128,7 @@ class Hand(pc.Deck):
         values) or False if not. The ace-through-5 straight is not included."""
         if not self.has_duplicates():
             r = self.ranks
-            if max(r) - min(r) == 4:
+            if abs(max(r) - min(r)) == 4:
                 return True
         return False
 
