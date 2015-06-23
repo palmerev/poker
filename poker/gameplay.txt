@@ -1,0 +1,44 @@
+Five card draw gameplay:
+    Setup game with 2 to 5 players
+    Deal hands
+
+    Turns:
+       for player in players:
+           - view hand # hidden from other players?
+           - place bet # limited to self.chips
+           - allow exchange of cards (up to five)
+               -discard(n) cards
+               -Deck.deal(n) # check deck.card_count
+           -view new hand
+
+------------------------
+
+Welcome to the game!
+Enter the number of players: ___
+Enter the name of player x: ___
+<confirmation dialogue>
+Dealing hands...
+Player 1:
+    1) view hand
+    2) bet
+    3) check (bet zero) #if no player has bet yet
+    4) fold
+
+    Enter an option 1 through 4: ___
+    <validate input>
+
+    1) view hand -> ['XX', 'XX', 'XX', 'XX', 'XX']
+        "Press Enter to return to menu"
+
+    2) bet -> "You have {0} chips. Bet how many?".format(self.chips)
+        <validate input>
+        <player1.bet(the_game, amount)>
+
+    if no player has bet yet:
+        3) check -> <ends turn>
+
+    4) fold -> <confirmation dialogue>
+        if yes: game.remove_player(player1)
+
+Evaluate hands:
+    

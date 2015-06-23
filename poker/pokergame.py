@@ -1,41 +1,37 @@
 #pokergame.py
-import playingcards as pcards #Card, Deck
-import pokerhand as phand
+from playingcards import * #Card, Deck
+from pokerhand import *
 
 class PokerGame(object):
     def __init__(self, *players):
         self.players = [Player(p) for p in players]
-        self.deck = pcards.Deck()
+        self.deck = Deck()
         self.pot = 0
 
     def __str__(self):
         pass
 
-    def add_players(self, *p):
-        self.players.extend(p)
+    def __repr__(self):
+        pass
+
+    def add_players(self, p):
+        self.players.append(p)
 
     def remove_player(self, p):
         self.players.remove(p)
 
+    def show_game_menu(self, p):
+        pass
+
     def play(self):
-        pass
+        for player in self.players:
+            self.deck.deal_hand(player, 5)
+            assert(len(player.hand) == 5))
+        for player in self.players:
+            self.show_game_menu(player)
 
-class Player(object):
-    def __init__(self, name, chips=100):
-        self.name = name
-        print "created Player", self.name
-        self.hand = pcards.Hand()
-        self.chips = chips
-
-    def __str__(self):
-        return self.name, self.hand
-
-    def __cmp__(self):
-        pass
-
-    def show_hand(self):
-        print self.hand
-
-    def bet(self, num_chips):
-        if num_chips > self.chips:
-            num_chips = self.chips
+    def end_turn(self):
+        for player in self.players:
+            if player.has_played:
+                player.has_played = False
+        self.deck.reset()
