@@ -10,9 +10,13 @@ class Player(object):
         self.hand = Hand()
         self.chips = chips
         self.has_played = False # updated each turn
+        self.has_folded = False
 
     def __repr__(self):
         return self.name, self.hand, "chips:", self.chips
+
+    def __cmp__(self, other):
+        return cmp(self.hand, other.hand)
 
     def show_hand(self):
         print self.hand
@@ -26,13 +30,12 @@ class Player(object):
 
     def bet(self, the_game, amount):
         if amount <= 0:
-            print "bet amount must be positive"
-            return
+            raise BetValueError("Bet value must be positive.")
+        if amount < the_game.min_bet:
+            raise BetValueError("You must bet at least {0} chips.".format(the_game.min_bet))
         if amount > self.chips:
             amount = self.chips
         self.chips -= amount
         the_game.pot += amount
-        self.played = True
-
-    def fold(self, the_game):
-        the_game.players.remove(self)
+        the_game.min_bet = amount
+        self.has_played = True

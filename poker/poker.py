@@ -17,10 +17,9 @@ def make_player_list(num_players):
     return player_names
 
 print "Welcome to Five-Card Draw!"
-print "Enter a number of players from two to five: ",
 while True:
     try:
-        num_players = int(raw_input(""))
+        num_players = int(raw_input("Enter a number of players from two to five: "))
         if num_players < 2 or num_players > 5:
             raise ValueError
         break
@@ -30,4 +29,5 @@ players = make_player_list(num_players)
 print players
 print "Dealing hands..."
 game = PokerGame(*players)
+
 game.play()
