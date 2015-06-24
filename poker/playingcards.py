@@ -56,3 +56,7 @@ class Deck(object):
 
     def deal_hand(self, num_cards, hand):
         hand.cards.extend(self.draw(num_cards))
+
+    def reset(self):
+        del self.cards
+        self.cards = [Card(x) for x in Card.CARD_NAMES]

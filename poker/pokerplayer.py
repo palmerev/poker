@@ -17,7 +17,17 @@ class Player(object):
     def show_hand(self):
         print self.hand
 
+    def check(self, the_game):
+        for player in the_game.players:
+            if player.has_played:
+                raise BetValueError
+        print self.name, "checks"
+        self.has_played = True
+
     def bet(self, the_game, amount):
+        if amount <= 0:
+            print "bet amount must be positive"
+            return
         if amount > self.chips:
             amount = self.chips
         self.chips -= amount

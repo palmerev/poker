@@ -24,7 +24,7 @@ while True:
         if num_players < 2 or num_players > 5:
             raise ValueError
         break
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         print "Input must be an integer between two and five."
 players = make_player_list(num_players)
 print players
