@@ -1,8 +1,10 @@
 #pokergame.py
-from playingcards import * #Card, Deck
-from pokerhand import *
-from pokerplayer import *
-from int_validation import *
+from playingcards import SUITS, VALUES, RANKS
+from playingcards import Card
+from playingcards import Deck
+from pokerhand import Hand
+from pokerplayer import Player
+from int_validation import get_int
 
 def clear_screen():
     print '\n' * 50

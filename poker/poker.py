@@ -1,7 +1,5 @@
 #poker.py
-from playingcards import *
-from pokerhand import *
-from pokergame import *
+from pokergame import PokerGame
 from int_validation import get_int
 
 def make_player_list(num_players):
@@ -20,11 +18,11 @@ def make_player_list(num_players):
 print "Welcome to Five-Card Draw!"
 while True:
     try:
-        num_players = int(raw_input("Enter a number of players from two to five: "))
+        num_players = get_int("Enter a number of players from two to five: ")
         if num_players < 2 or num_players > 5:
             raise ValueError
         break
-    except (TypeError, ValueError):
+    except ValueError:
         print "Input must be an integer between two and five."
 players = make_player_list(num_players)
 print players

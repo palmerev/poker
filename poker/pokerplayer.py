@@ -1,7 +1,8 @@
 #pokerplayer.py
-from playingcards import *
-from pokerhand import *
-from pokergame import *
+from playingcards import SUITS, VALUES, RANKS
+from pokerhand import Hand
+from pokergame import PokerGame
+from pokergame import BetValueError, TurnError
 
 class Player(object):
     def __init__(self, name, chips=100):
