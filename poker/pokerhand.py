@@ -1,8 +1,8 @@
 # pokerhand.py
 from collections import Counter, namedtuple
-import playingcards as pc
+import playingcards
 
-class Hand(pc.Deck):
+class Hand(playingcards.Deck):
     SERIES_HANDS = ["High Card", "Straight", "Flush", "Straight Flush", "Royal Flush"]
     GROUPED_HANDS = ["Four of a Kind", "Three of a Kind", "Full House", "Two Pair", "One Pair"]
     HANDS_BY_RANK = {
@@ -48,7 +48,7 @@ class Hand(pc.Deck):
             raise ValueError, "unrecognized hand in Hand.__cmp__"
 
     def add(self, *card_names):
-        self.cards.extend(pc.Card(name) for name in card_names)
+        self.cards.extend(playingcards.Card(name) for name in card_names)
 
     def break_grouped_hand_tie(self, other):
         cr_pairs1 = Hand.make_count_rank_pairs(self)
@@ -62,7 +62,7 @@ class Hand(pc.Deck):
         card_list = []
         #take value, count pairs from dictionary and make a list of count, rank pairs
         for val, cnt in self.value_counter().items():
-            cr = CRPair(count=cnt ,rank=pc.Card.RANKS_BY_VALUE[val])
+            cr = CRPair(count=cnt ,rank=playingcards.Card.RANKS_BY_VALUE[val])
             card_list.append(cr)
         return sorted(card_list, reverse=True)
 
@@ -76,7 +76,7 @@ class Hand(pc.Deck):
 
     @property
     def ranks(self):
-        return sorted(pc.Card.RANKS_BY_VALUE[c.value] for c in self.cards)
+        return sorted(playingcards.Card.RANKS_BY_VALUE[c.value] for c in self.cards)
 
     def discard_all(self):
         del self.cards[:]
@@ -98,7 +98,7 @@ class Hand(pc.Deck):
         elif (straight or "".join(ordered_values) == "A5432") and not flush:
             return "Straight"
         elif max(card_counts) == 4:
-            return "Four of a Kind"
+            return ``"Four of a Kind"
         elif card_counts[0] == 3 and card_counts[1] == 2:
             return "Full House"
         elif card_counts[0] == 3:
@@ -109,18 +109,6 @@ class Hand(pc.Deck):
             return "One Pair"
         else:
             return "High Card"
-
-    def order_by_rank(self, rev=False):
-        pass
-        '''#TODO: remove this function and see if built-in sort works with __cmp__ overridden
-        """Returns the hand with the cards arranged from lowest to highest.
-        If rev=True, cards are arranged from highest to lowest."""
-        cards_with_ranks = [(pc.Card.RANKS_BY_VALUE[c.value], c) for c in self.cards]
-        cards_with_ranks.sort()
-        if rev:
-            return [c[1] for c in reversed(cards_with_ranks)]
-        return [c[1] for c in cards_with_ranks]
-        '''
 
     def has_duplicates(self):
         quantities = self.value_counter().values()
