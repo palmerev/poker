@@ -6,7 +6,6 @@ from pokergame import *
 class Player(object):
     def __init__(self, name, chips=100):
         self.name = name
-        #print "created Player", self.name
         self.hand = Hand()
         self.chips = chips
         self.has_played = False # updated each turn
@@ -18,15 +17,15 @@ class Player(object):
     def __cmp__(self, other):
         return cmp(self.hand, other.hand)
 
-    def show_hand(self):
-        print self.hand
+    #def show_hand(self):
+    #    print self.hand
 
-    def check(self, the_game):
-        for player in the_game.players:
-            if player.has_played:
-                raise BetValueError
-        print self.name, "checks"
-        self.has_played = True
+    #def check(self, the_game):
+    #    for player in the_game.players:
+    #        if player.has_played:
+    #            raise BetValueError
+    #    print self.name, "checks"
+    #    self.has_played = True
 
     def bet(self, the_game, amount):
         if amount <= 0:

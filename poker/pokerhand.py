@@ -28,6 +28,9 @@ class Hand(pc.Deck):
     def __len__(self):
         return len(self.cards)
 
+    def __iter__(self):
+        return iter(self.cards)
+
     def __cmp__(self, other):
         """Returns 1 if calling object (self) ranks higher than other,
         -1 if self ranks lower, or 0 if they have equal rank."""

@@ -75,7 +75,7 @@ class PokerGame(object):
         print "{0}:".format(player.name)
         print "hand:", player.hand
         print "chips:", player.chips
-        raw_input("Press any key to return to the main menu.")
+        raw_input("Press Enter to return to the main menu.")
         clear_screen()
 
     def bet_menu(self, player):
@@ -84,12 +84,13 @@ class PokerGame(object):
         print "hand:", player.hand
         print "chips:", player.chips
         while True:
-            bet_amt = get_int("Bet how much? (minimum is {0})".format(self.min_bet))
+            bet_amt = get_int("Bet how much? (minimum is {0}) ".format(self.min_bet))
             try:
                 player.bet(self, bet_amt)
                 break
             except BetValueError as e:
                 print e.message
+        clear_screen()
 
     def get_new_cards(self, player):
         print "{0}, your hand is: {1}".format(player.name, player.hand)
@@ -100,12 +101,13 @@ class PokerGame(object):
             if discards == "":
                 return
             discards_list = discards.split()
-            for c in discards_list:
+            for i in discards_list:
+                c = Card(i)
                 if c not in player.hand:
                     print "{0} is not a card in your hand!".format(c)
                     break
             else:
-                for c in discards_list:
+                for i in discards_list:
                     player.hand.remove(c)
                     print "discarded {0}.".format(c)
         player.has_played = True
@@ -167,13 +169,13 @@ class PokerGame(object):
             self.deck.deal_hand(5, player.hand)
             assert(len(player.hand) == 5)
             # initial round of betting
-            self.betting_round()
-            # optional exchange of cards
-            for player in self.players:
-                if not player.has_folded:
-                    self.get_new_cards(player)
-            self.betting_round()
-            self.score()
+        self.betting_round()
+        # optional exchange of cards
+        for player in self.players:
+            if not player.has_folded:
+                self.get_new_cards(player)
+        self.betting_round()
+        self.score()
         try:
             self.end_hand()
         except TurnError as e:

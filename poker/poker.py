@@ -1,7 +1,8 @@
 #poker.py
-from pokergame import *
-from pokerhand import *
 from playingcards import *
+from pokerhand import *
+from pokergame import *
+from int_validation import get_int
 
 def make_player_list(num_players):
     """prompts the user to enter a name for each of n number of players,
