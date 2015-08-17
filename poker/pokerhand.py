@@ -98,7 +98,7 @@ class Hand(playingcards.Deck):
         elif (straight or "".join(ordered_values) == "A5432") and not flush:
             return "Straight"
         elif max(card_counts) == 4:
-            return ``"Four of a Kind"
+            return "Four of a Kind"
         elif card_counts[0] == 3 and card_counts[1] == 2:
             return "Full House"
         elif card_counts[0] == 3:
