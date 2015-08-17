@@ -212,7 +212,7 @@ class Player(object):
         if amount < the_game.min_bet:
             raise BetValueError("You must bet at least {0} chips.".format(the_game.min_bet))
         if amount > self.chips:
-            amount = self.chips
+            raise BetValueError("You don't have that many chips.")
         self.chips -= amount
         the_game.pot += amount
         the_game.min_bet = amount
