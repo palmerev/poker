@@ -148,6 +148,7 @@ class PokerGame(object):
                     player.has_played = True
                 else:
                     raise TurnError("main_turn_menu returned invalid choice.")
+         self.min_bet = 0
 
     def score(self):
         for player in self.players:
