@@ -93,16 +93,16 @@ class PokerGame(object):
                 print e.message
         clear_screen()
 
-    def get_new_cards(self, player):
-        print "{0}, your hand is: {1}".format(player.name, player.hand)
-        print "If you'd like to exchange cards, enter their abbreviations, separated by spaces."
-        print "Otherwise, press Enter."
+    def discard_old_cards(self, player):
         while True:
             discards = raw_input(" ")
             if discards == "":
                 return
             discards_list = discards.split()
             for i in discards_list:
+                if i.upper() not in Card.CARD_NAMES:
+                    print "{0} is not a valid card.".format(i)
+                    break
                 c = Card(i)
                 if c not in player.hand:
                     print "{0} is not a card in your hand!".format(c)
@@ -111,7 +111,20 @@ class PokerGame(object):
                 for i in discards_list:
                     player.hand.cards.remove(c)
                     print "discarded {0}.".format(c)
+        raw_input("Press Enter to continue")
         player.has_played = True
+
+    def get_new_cards(self, player):
+        print "{0}, your hand is: {1}".format(player.name, player.hand)
+        print "If you'd like to get some new cards, enter their abbreviations, separated by spaces."
+        print "Otherwise, press Enter."
+        self.discard_old_cards(player);
+        num_cards = len(player.hand)
+        if num_cards < 5:
+            num_discarded = 5 - num_cards
+            self.deck.deal_hand(num_discarded, player.hand);
+        print "Your new hand is: {0}".format(player.hand)
+        raw_input("Press Enter to continue")
 
     def betting_round(self):
         turn_actions = ["see hand and chips", "bet", "fold", "end turn"]
@@ -175,6 +188,7 @@ class PokerGame(object):
         for player in self.players:
             if not player.has_folded:
                 self.get_new_cards(player)
+
         self.betting_round()
         self.score()
         try:
