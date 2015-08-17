@@ -1,4 +1,4 @@
-#poker.py 
+#poker.py
 from pokergame import PokerGame
 from int_validation import get_int
 
@@ -8,6 +8,9 @@ def make_player_list(num_players):
     player_names = []
     while len(player_names) < num_players:
             name = raw_input("Enter a name for player {0}: ".format(len(player_names) + 1))
+            if name == "":
+                print "the name cannot be blank."
+                continue
             if name in player_names:
                 print "There is already a player with that name."
                 continue
