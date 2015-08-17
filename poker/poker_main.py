@@ -19,10 +19,12 @@ def make_player_list(num_players):
     return player_names
 
 print "Welcome to Five-Card Draw!"
+MIN_NUM_PLAYERS = 2
+MAX_NUM_PLAYERS = 5
 while True:
     try:
         num_players = get_int("Enter a number of players from two to five: ")
-        if num_players < 2 or num_players > 5:
+        if MIN_NUM_PLAYERS < 2 or MAX_NUM_PLAYERS > 5:
             raise ValueError
         break
     except ValueError:
