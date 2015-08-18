@@ -94,21 +94,22 @@ class PokerGame(object):
         clear_screen()
 
     def discard_old_cards(self, player):
+        player_card_names = [card.name for card in player.hand.cards]
         while True:
             discards = raw_input(" ")
             if discards == "":
                 return
             discards_list = discards.split()
-            for i in discards_list:
-                if i.upper() not in Card.CARD_NAMES:
+            for card_abbr in discards_list:
+                if card_abbr.upper() not in Card.CARD_NAMES:
                     print "{0} is not a valid card.".format(i)
                     break
-                c = Card(i)
-                if c not in player.hand:
+                if card_abbr.upper() not in player_card_names:
                     print "{0} is not a card in your hand!".format(c)
                     break
-            else:
+            else: #no break, cards all valid
                 for i in discards_list:
+                    c = Card(i)
                     player.hand.cards.remove(c)
                     print "discarded {0}.".format(c)
         raw_input("Press Enter to continue")
@@ -127,7 +128,12 @@ class PokerGame(object):
         raw_input("Press Enter to continue")
 
     def betting_round(self):
-        turn_actions = ["see hand and chips", "bet", "fold", "end turn"]
+        turn_actions = [
+            "see hand and chips",
+            "bet",
+            "fold",
+            # "end turn"
+        ]
         for player in self.players:
             player.has_played = False
             while not player.has_played:
@@ -143,12 +149,12 @@ class PokerGame(object):
                         if confirm_fold.lower() == 'y':
                             player.has_played = True
                             player.folded = True
-                elif choice == "end turn":
-                    print "{0}, your turn is over.".format(player.name)
-                    player.has_played = True
+                # elif choice == "end turn":
+                #     print "{0}, your turn is over.".format(player.name)
+                #     player.has_played = True
                 else:
                     raise TurnError("main_turn_menu returned invalid choice.")
-         self.min_bet = 0
+        self.min_bet = 0
 
     def score(self):
         for player in self.players:
@@ -222,7 +228,7 @@ class Player(object):
     #    self.has_played = True
 
     def bet(self, the_game, amount):
-        if amount <= 0:
+        if amount < 0:
             raise BetValueError("Bet value must be positive.")
         if amount < the_game.min_bet:
             raise BetValueError("You must bet at least {0} chips.".format(the_game.min_bet))
